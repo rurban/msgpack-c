@@ -328,6 +328,17 @@ msgpack_pack_inline_func_fixint(_int64)(msgpack_pack_user x, int64_t d)
 	msgpack_pack_append_buffer(x, buf, 9);
 }
 
+msgpack_pack_inline_func_fixint(_crc)(msgpack_pack_user x)
+{
+#ifdef _msgpack_pack_crc_user
+	unsigned char buf[5];
+        uint32_t crc = 0;
+        _msgpack_pack_crc_user(crc, x);
+	buf[0] = 0xc6; _msgpack_store32(&buf[1], crc);
+	msgpack_pack_append_buffer(x, buf, 5);
+#endif
+}
+
 #undef msgpack_pack_inline_func_fixint
 #endif
 
@@ -372,6 +383,16 @@ msgpack_pack_inline_func(_int64)(msgpack_pack_user x, int64_t d)
 	msgpack_pack_real_int64(x, d);
 }
 
+msgpack_pack_inline_func(_crc)(msgpack_pack_user x)
+{
+#ifdef _msgpack_pack_crc_user
+	unsigned char buf[5];
+        uint32_t crc = 0;
+        _msgpack_pack_crc_user(crc, x);
+	buf[0] = 0xc6; _msgpack_store32(&buf[1], crc);
+	msgpack_pack_append_buffer(x, buf, 5);
+#endif
+}
 
 #ifdef msgpack_pack_inline_func_cint
 

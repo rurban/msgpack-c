@@ -180,6 +180,7 @@ typedef enum {
 	MSGPACK_UNPACK_EXTRA_BYTES			=  1,
 	MSGPACK_UNPACK_CONTINUE				=  0,
 	MSGPACK_UNPACK_PARSE_ERROR			= -1,
+	MSGPACK_UNPACK_CRC_ERROR			= -2,
 } msgpack_unpack_return;
 
 // obsolete

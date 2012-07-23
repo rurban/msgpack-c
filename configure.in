@@ -1,6 +1,6 @@
 AC_INIT(src/object.cpp)
 AC_CONFIG_AUX_DIR(ac)
-AM_INIT_AUTOMAKE(msgpack, 0.5.7)
+AM_INIT_AUTOMAKE(msgpack, 0.5.7crc)
 AC_CONFIG_HEADER(config.h)
 
 AC_SUBST(CFLAGS)
@@ -42,6 +42,7 @@ else
 	CFLAGS="$CFLAGS -DNDEBUG"
 fi
 
+AC_CHECK_LIB([z],[crc32])
 
 AC_CACHE_CHECK([for __sync_* atomic operations], msgpack_cv_atomic_ops, [
 	AC_TRY_LINK([

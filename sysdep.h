@@ -190,6 +190,17 @@ typedef unsigned int _msgpack_atomic_counter_t;
     ({ cast val; memcpy(&val, (char*)from, 8); _msgpack_be64(val); })
 */
 
+#ifdef HAVE_ZLIB
+#include <zlib.h>
+#define _msgpack_data_crc(crc, from, to)				  \
+  crc = crc32(crc, (void *)from, (void*)to - (void*)from);
+#else
+#define _msgpack_data_crc(crc, from, to)				  \
+    { unsigned char c; unsigned char *buf = (char *)from;		  \
+      while(buf < to) {							  \
+	  c = *buf++; crc = (crc >> 1) + ((crc & 1) << 15); crc += c;     \
+	  crc &= 0xffff; }}
+#endif
 
 #endif /* msgpack/sysdep.h */
 

@@ -203,7 +203,7 @@ msgpack_unpack_func(int, _execute)(msgpack_unpack_struct(_context)* ctx, const c
 					push_simple_value(_true);
 				//case 0xc4:
 				//case 0xc5:
-				//case 0xc6:
+				//case 0xc6: // crc uint32 at the buffer end
 				//case 0xc7:
 				//case 0xc8:
 				//case 0xc9:
@@ -375,15 +375,24 @@ _finish:
 	++p;
 	ret = 1;
 	/*printf("-- finish --\n"); */
+	if (*p == 0xc6)	{
+	  uint32_t crc = 0, num;
+	  _msgpack_data_crc(crc, data, p);
+	  p++;
+	  num = _msgpack_load32(uint32_t, p);
+	  p += 4;
+	  if (num != crc)
+	    ret = MSGPACK_UNPACK_CRC_ERROR;
+	}
 	goto _end;
 
 _failed:
 	/*printf("** FAILED **\n"); */
-	ret = -1;
+	ret = MSGPACK_UNPACK_PARSE_ERROR;
 	goto _end;
 
 _out:
-	ret = 0;
+	ret = MSGPACK_UNPACK_CONTINUE;
 	goto _end;
 
 _end:
