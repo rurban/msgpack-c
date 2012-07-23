@@ -171,6 +171,7 @@ typedef enum {
 	UNPACK_EXTRA_BYTES			=  1,
 	UNPACK_CONTINUE				=  0,
 	UNPACK_PARSE_ERROR			= -1,
+	UNPACK_CRC_ERROR			= -2,
 } unpack_return;
 
 // obsolete
@@ -327,6 +328,9 @@ inline void unpack(unpacked* result,
 	case UNPACK_CONTINUE:
 		throw unpack_error("insufficient bytes");
 
+	case UNPACK_CRC_ERROR:
+		throw unpack_error("crc error");
+
 	case UNPACK_PARSE_ERROR:
 	default:
 		throw unpack_error("parse error");
@@ -360,6 +364,9 @@ inline object unpack(const char* data, size_t len, zone& z, size_t* off)
 
 	case UNPACK_CONTINUE:
 		throw unpack_error("insufficient bytes");
+
+	case UNPACK_CRC_ERROR:
+		throw unpack_error("crc error");
 
 	case UNPACK_PARSE_ERROR:
 	default:

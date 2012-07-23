@@ -77,6 +77,8 @@ public:
 	packer<Stream>& pack_raw(size_t l);
 	packer<Stream>& pack_raw_body(const char* b, size_t l);
 
+	packer<Stream>& pack_crc();
+
 private:
 	static void _pack_uint8(Stream& x, uint8_t d);
 	static void _pack_uint16(Stream& x, uint16_t d);
@@ -118,6 +120,8 @@ private:
 
 	static void _pack_raw(Stream& x, size_t l);
 	static void _pack_raw_body(Stream& x, const void* b, size_t l);
+
+	static void _pack_crc(Stream& x);
 
 	static void append_buffer(Stream& x, const unsigned char* buf, unsigned int len)
 		{ x.write((const char*)buf, len); }
@@ -310,6 +314,10 @@ inline packer<Stream>& packer<Stream>::pack_raw(size_t l)
 template <typename Stream>
 inline packer<Stream>& packer<Stream>::pack_raw_body(const char* b, size_t l)
 { _pack_raw_body(m_stream, b, l); return *this; }
+
+template <typename Stream>
+inline packer<Stream>& packer<Stream>::pack_crc()
+{ _pack_crc(m_stream); return *this; }
 
 
 }  // namespace msgpack
